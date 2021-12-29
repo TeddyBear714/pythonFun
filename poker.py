@@ -68,6 +68,7 @@ class Table:
     def __init__(self,player_names,player_money):
         if len(player_names) != len(player_money):
             print("Number of players' names is different to the number of the different amounts of money that is allocated to them")
+        self.pot = 0
         self.shuffled_deck = Deck()
         self.shuffled_deck.shuffler()
         self.players = []

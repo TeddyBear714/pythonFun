@@ -5,7 +5,7 @@ class Player:
     def __init__(self,name,money):
         self.name = name
         self.money = money
-        self.cards = "0"
+        self.cards = ["0","0"]
         self.seat = "0"
         
     def set_cards(self,cards):
@@ -75,10 +75,46 @@ class Table:
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
             self.players[n].set_seat(n+1)
-            self.players[n].set_cards([self.shuffled_deck[n],self.shuffled_deck[n+len(player_money)]])
+            #self.players[n].set_cards([self.shuffled_deck.cards(n),self.shuffled_deck.cards(n+len(player_money))])
+    
+    def set_pot(self,new_pot):
+        self.pot = new_pot
         
-        
+
+
+def main():
+    print("WELCOME YOU SONS OF BITCHES!!!")
+    print("TO THE BEST POKER GAME THERE IS..")
+    print("\n")
+    print("Now, enter the number of the players please")
+    number_of_players = int(input())
+    print("Goooood!! And now enter their names")
+    player_names = []
+    for i in range(0,number_of_players):
+        player_names.append(input())
+    print("And their initial money please..")
+    player_money = []
+    for i in range(0,number_of_players):
+        player_money.append(float(input()))
+    table_of_hell = Table(player_names,player_money)
+    players = table_of_hell.players
+    deck = table_of_hell.shuffled_deck
+    for n in range(0,len(players)):
+        players[n].set_cards([deck.cards[n],deck.cards[n+number_of_players]])
+    print("Name","Money","Seat","Cards")
+    for p in players:
+        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
+
+    print("\n")
+    print("How many rounds would you like to play?")
+    number_of_rounds = int(input())
+    #for i in range(1,number_of_rounds):
+   
+    
+    
+main()    
                
+        
 #t = Table(["Tazouli","Itzo","Damkaliaros","Austrekis"],[2000,2000,2000,2000])
 #t.players[0].seat = 1
 #t.players[0].cards = [Card("Ace","spades"),Card("Ace","clubs")]

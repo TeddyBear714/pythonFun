@@ -73,6 +73,8 @@ class Table:
         self.players = []
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
+            self.players[n].set_seat(n+1)
+            self.players[n].set_cards([self.shuffled_deck[n],self.shuffled_deck[n+len(player_money)]])
         
         
                

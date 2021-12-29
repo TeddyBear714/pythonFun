@@ -69,6 +69,7 @@ class Table:
         if len(player_names) != len(player_money):
             print("Number of players' names is different to the number of the different amounts of money that is allocated to them")
         self.pot = 0
+        self.common_cards = [Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs")]
         self.shuffled_deck = Deck()
         self.shuffled_deck.shuffler()
         self.players = []
@@ -79,6 +80,9 @@ class Table:
     
     def set_pot(self,new_pot):
         self.pot = new_pot
+        
+    def set_common_cards(self,common_cards):
+        self.common_cards = common_cards
         
 
 
@@ -101,10 +105,10 @@ def main():
     deck = table_of_hell.shuffled_deck
     for n in range(0,len(players)):
         players[n].set_cards([deck.cards[n],deck.cards[n+number_of_players]])
-    print("Name","Money","Seat","Cards")
-    for p in players:
-        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
-
+    common_cards = deck[0:3]+deck[4]+deck[6]
+    table_of_hell.set_common_cards(common_cards)
+    
+    
     print("\n")
     print("How many rounds would you like to play?")
     number_of_rounds = int(input())
@@ -129,4 +133,8 @@ main()
 #    print(c.number,c.suit)
     
 #for p in t.players:
+#    print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
+
+#print("Name","Money","Seat","Cards")
+#for p in players:
 #    print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])

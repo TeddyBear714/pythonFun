@@ -7,6 +7,8 @@ class Player:
         self.money = money
         self.cards = ["0","0"]
         self.seat = "0"
+        self.active = True
+        self.bet = 0
         
     def set_cards(self,cards):
         self.cards = cards
@@ -65,14 +67,19 @@ class Deck:
         
 
 class Table:
-    def __init__(self,player_names,player_money):
+    def __init__(self,player_names,player_money,small,big):
         if len(player_names) != len(player_money):
             print("Number of players' names is different to the number of the different amounts of money that is allocated to them")
         self.pot = 0
+        self.small_blind = small
+        self.big_blind = big
         self.common_cards = [Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs"),Card("Joker","clubs")]
         self.shuffled_deck = Deck()
         self.shuffled_deck.shuffler()
         self.players = []
+        self.to_call = "False"
+        self.raiser = None
+        self.raise = 0
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
             self.players[n].set_seat(n+1)
@@ -83,6 +90,8 @@ class Table:
         
     def set_common_cards(self,common_cards):
         self.common_cards = common_cards
+        
+        
         
 
 
@@ -102,11 +111,82 @@ def main():
         player_money.append(float(input()))
     table_of_hell = Table(player_names,player_money)
     players = table_of_hell.players
+    
+    
+    #From here and beyond I should cut the code into a new "next_round" method in the Table class
     deck = table_of_hell.shuffled_deck
     for n in range(0,len(players)):
         players[n].set_cards([deck.cards[n],deck.cards[n+number_of_players]])
-    common_cards = deck[0:3]+deck[4]+deck[6]
+    common_cards = deck.cards[2*number_of_players:3+(2*number_of_players)]+[deck.cards[(2*number_of_players)+4]]+[deck.cards[(2*number_of_players)+6]]
     table_of_hell.set_common_cards(common_cards)
+    
+    #======Before flop=====================================
+    
+    #Small and big blind
+    players[0].money = players[0].money-table_of_hell.small
+    players[1].money = players[1].money-table_of_hell.big
+    table_of_hell.pot = table_of_hell.small + table_of_hell.big
+    
+    #Initial bets    
+    for p in players:
+        #if p checks:
+            #continue
+        #if p folds:
+            #p.active = False
+            #continue
+        #if nada:
+            #"cut the bullshit"
+        #else:
+            #to_call = True
+            #while table_of_hell.to_call == True:
+                 #for defence in players.remove(attacker):
+                        #if defender raises
+                            #attacker = defender
+                            #break
+                        #else
+                            #
+        
+
+         #print(defender.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
+          #  if input() == "c":
+           #     continue
+            #elif input() == "f":
+             #   defender.active == False
+              #  continue
+            #splitted_input = input().split("b")
+            #if splitted_input[0] != "":
+             #   print("Cut the bullshit mate..")
+            #else:
+             #   bet = float(splitted_input[1])
+              #  table_of_hell.pot = table_of_hell.pot + bet
+               # table_of_hell.to_call = True
+               # table_of_hell.raiser = defender
+                #attacker = players.index(p)
+    
+    #better add it as a method in Table
+    
+    
+ #   sMin = players[0].seat
+  #  end = False
+   # while end==False:
+    #    if p.seat <= sMin
+     #   sorted_players.append(p)
+      #  sMin = p.seat
+        
+        
+    
+    print("Name","Money","Seat","Cards")
+    for p in players:
+        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
+    
+    print("Flop:")
+    print([[x.number,x.suit] for x in common_cards[0:3]])
+    print("Turn")
+    print(common_cards[3].number,common_cards[3].suit)
+    print("River")
+    print(common_cards[4].number,common_cards[4].suit)
+
+    
     
     
     print("\n")
@@ -115,9 +195,32 @@ def main():
     #for i in range(1,number_of_rounds):
    
     
-    
-main()    
-               
+
+
+#main()    
+
+#sorter
+a = [2,3,-2,20,4,0,6]
+aInit = a
+print("This is a")
+print(aInit)
+#index = []
+aSorted = []
+while len(a)!=0:
+    minim = a[0]
+    index0 = 0
+    for j in range(0,len(a)):
+        if a[j]<=minim:
+            minim = a[j]
+            index0 = j
+    aSorted.append(a[index0])
+    a.remove(a[index0])
+
+#for i in range(0,len(a)):
+ #   aSorted.append(a[index[i]])
+
+print("This is aSorted")
+print(aSorted)
         
 #t = Table(["Tazouli","Itzo","Damkaliaros","Austrekis"],[2000,2000,2000,2000])
 #t.players[0].seat = 1

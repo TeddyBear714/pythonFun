@@ -129,11 +129,22 @@ def main():
     
     #Initial bets    
     for p in players:
-        #if p checks:
-            #continue
-        #if p folds:
-            #p.active = False
-            #continue
+        print(p.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
+        inp = input()
+        if inp=="c":
+            continue
+        elif inp=="f":
+            p.active = False
+            continue
+        splitted_input = inp.split("b")
+        if splitted_input[0] != "":
+            print("Cut the bullshit bruv")
+        else:
+            table_of_hell.to_call = True
+            while table_of_hell.to_call == True:
+                for defender in players.remove(p):
+                    if defender
+
         #if nada:
             #"cut the bullshit"
         #else:
@@ -147,7 +158,7 @@ def main():
                             #
         
 
-         #print(defender.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
+         #
           #  if input() == "c":
            #     continue
             #elif input() == "f":

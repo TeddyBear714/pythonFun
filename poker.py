@@ -93,6 +93,8 @@ class Table:
         
     def preflop(self):
             #Small and big blind
+        players = self.players
+        table_of_hell = self
         players[0].money = players[0].money-table_of_hell.small_blind
         players[0].bet = table_of_hell.small_blind
         players[1].money = players[1].money-table_of_hell.big_blind
@@ -143,11 +145,11 @@ class Table:
                             table_of_hell.pot = table_of_hell.pot + amount_to_call
                             #That is to check if this defender is the last one to speak
                             #If yes, the loop ends since all the attacks have been matched either by a call or a fold
-                            if players_copy.index(defender) == (len(players_copy)-1): 
+                            if active_defence_players.index(defender) == (len(active_defence_players)-1): 
                                 table_of_hell.to_call = False
                         elif defender_input == "f":
                             defender.active = False
-                            if players_copy.index(defender) == (len(players_copy)-1):
+                            if active_defence_players.index(defender) == (len(active_defence_players)-1):
                                 table_of_hell.to_call = False
                         else: 
                             #In this case, this defender becomes the new attacker
@@ -197,82 +199,8 @@ def main():
     table_of_hell.set_common_cards(common_cards)
     
     #======Before flop=====================================
-    
-    #Small and big blind
-    players[0].money = players[0].money-table_of_hell.small_blind
-    players[0].bet = table_of_hell.small_blind
-    players[1].money = players[1].money-table_of_hell.big_blind
-    players[1].bet = table_of_hell.big_blind
-    table_of_hell.pot = table_of_hell.small_blind + table_of_hell.big_blind
-    
-    #Initial bets    
-    for p in players:
-        print(p.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
-        inp = input()
-        if inp=="c":
-            continue
-        elif inp=="f":
-            p.active = False
-            if players.index(p) == (len(players)-2):
-                break
-            else:
-                continue
-        splitted_input = inp.split("b")
-        if splitted_input[0] != "":
-            print("Cut the bullshit bruv")
-        else:
-            table_of_hell.to_call = True
-            attacker = p
-            attacker_bet = p.bet + float(splitted_input[1])
-            p.money = p.money - float(splitted_input[1])
-            p.bet = attacker_bet
-            table_of_hell.pot = table_of_hell.pot + float(splitted_input[1])
-            
-            while table_of_hell.to_call == True:
-                
-                players_copy = [pl for pl in players]
-                players_copy.remove(attacker)
-                                
-                for defender in players_copy:
-                    amount_to_call = attacker_bet - defender.bet
-                    print(defender.name," you need ",amount_to_call," to call")
-                    print("Press 'cl' to call, 'f' to fold or 'rx' to raise to x money")
-                    defender_input = input()
-                    if defender_input == "cl":
-                        defender.bet = attacker_bet
-                        defender.money = defender.money - amount_to_call
-                        table_of_hell.pot = table_of_hell.pot + amount_to_call
-                        if players_copy.index(defender) == (len(players_copy)-1):
-                            table_of_hell.to_call = False
-                    elif defender_input == "f":
-                        defender.active = False
-                        if players_copy.index(defender) == (len(players_copy)-1):
-                            table_of_hell.to_call = False
-                    else: 
-                        splitted_input_def = defender_input.split("r")
-                        if splitted_input_def[0] != "":
-                            print("Cut the bullshit bruv!")
-                        else:
-                            defender.bet = defender.bet + float(splitted_input_def[1])
-                            defender.money = defender.money - float(splitted_input_def[1])
-                            table_of_hell.pot = table_of_hell.pot + float(splitted_input_def[1])
-                            attacker = defender
-                            attacker_bet = defender.bet
-                            break
-            break
-
-      
-    
-    #better add it as a method in Table
-    
-    
- #   sMin = players[0].seat
-  #  end = False
-   # while end==False:
-    #    if p.seat <= sMin
-     #   sorted_players.append(p)
-      #  sMin = p.seat
-        
+    table_of_hell.preflop()
+     
     active_players = []
     for p in players:
         if p.active == True:

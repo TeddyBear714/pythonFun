@@ -236,7 +236,32 @@ def main():
                 print(" ")
                 print("River is")
                 print([common_cards[5].number,common_cards[5].suit])
+                
+                #======Final action========================
+                table_of_hell.action()
 
+
+                
+                
+#Next steps:
+#         Find a way to change the order of players based on their seats in the beginning and then using the attacker as the
+#         first player after each attack 
+
+#         Find a way to find the different combos and sort out the which one is the dominant each time new cards are opened
+
+#         Start making strategic players/bots
+
+
+
+
+
+
+
+
+
+
+
+                
                 
 #    print("Active players are ",[p.name for p in active_players])
 #    print(" ")

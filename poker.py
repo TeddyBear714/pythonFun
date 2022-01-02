@@ -238,28 +238,28 @@ def main():
                 print([common_cards[5].number,common_cards[5].suit])
 
                 
-    print("Active players are ",[p.name for p in active_players])
-    print(" ")
-    print("Table's pot is ",table_of_hell.pot)
-    print(" ")
-    print("Name","Money","Seat","Cards")
-    for p in players:
-        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
-    
-    print("Flop:")
-    print([[x.number,x.suit] for x in common_cards[0:3]])
-    print("Turn")
-    print(common_cards[3].number,common_cards[3].suit)
-    print("River")
-    print(common_cards[4].number,common_cards[4].suit)
+#    print("Active players are ",[p.name for p in active_players])
+#    print(" ")
+#    print("Table's pot is ",table_of_hell.pot)
+#    print(" ")
+#    print("Name","Money","Seat","Cards")
+#    for p in players:
+#        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
+#    
+#    print("Flop:")
+#    print([[x.number,x.suit] for x in common_cards[0:3]])
+#    print("Turn")
+#    print(common_cards[3].number,common_cards[3].suit)
+#    print("River")
+#    print(common_cards[4].number,common_cards[4].suit)
 
     
     
     
-    print("\n")
-    print("How many rounds would you like to play?")
-    number_of_rounds = int(input())
-    #for i in range(1,number_of_rounds):
+#    print("\n")
+#    print("How many rounds would you like to play?")
+#    number_of_rounds = int(input())
+#    #for i in range(1,number_of_rounds):
    
     
 

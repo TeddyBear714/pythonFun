@@ -79,7 +79,7 @@ class Table:
         self.players = []
         self.to_call = "False"
         self.raiser = None
-        self.raise = 0
+        self.raised = 0
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
             self.players[n].set_seat(n+1)
@@ -90,6 +90,82 @@ class Table:
         
     def set_common_cards(self,common_cards):
         self.common_cards = common_cards
+        
+    def preflop(self):
+            #Small and big blind
+        players[0].money = players[0].money-table_of_hell.small_blind
+        players[0].bet = table_of_hell.small_blind
+        players[1].money = players[1].money-table_of_hell.big_blind
+        players[1].bet = table_of_hell.big_blind
+        table_of_hell.pot = table_of_hell.small_blind + table_of_hell.big_blind
+
+        #Initial bets    
+        for p in players:
+            print(p.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
+            inp = input()
+            if inp=="c":
+                continue
+            elif inp=="f":
+                p.active = False
+                if players.index(p) == (len(players)-2):
+                    break
+                else:
+                    continue
+            splitted_input = inp.split("b")
+            if splitted_input[0] != "":
+                print("Cut the bullshit bruv")
+            else:
+                table_of_hell.to_call = True
+                attacker = p    #That's the player that initiates a bet
+                attacker_bet = p.bet + float(splitted_input[1])  #That's the total amount of money that the attacker has placed in the pot
+                p.money = p.money - float(splitted_input[1])
+                p.bet = attacker_bet
+                table_of_hell.pot = table_of_hell.pot + float(splitted_input[1])
+
+                while table_of_hell.to_call == True:
+
+                    active_defence_players = []
+                    for act_def in players:
+                        if act_def.active == True:
+                            active_defence_players.append(act_def)
+                    active_defence_players.remove(attacker)
+                    
+                    #defenders are all the players that need to match a bet by an attacker
+
+                    for defender in active_defence_players:
+                        amount_to_call = attacker_bet - defender.bet
+                        print(defender.name," you need ",amount_to_call," to call")
+                        print("Press 'cl' to call, 'f' to fold or 'rx' to raise to x money")
+                        defender_input = input()
+                        if defender_input == "cl":
+                            defender.bet = attacker_bet #The TOTAL amount of money that this defender has placed in the pot so far
+                            defender.money = defender.money - amount_to_call
+                            table_of_hell.pot = table_of_hell.pot + amount_to_call
+                            #That is to check if this defender is the last one to speak
+                            #If yes, the loop ends since all the attacks have been matched either by a call or a fold
+                            if players_copy.index(defender) == (len(players_copy)-1): 
+                                table_of_hell.to_call = False
+                        elif defender_input == "f":
+                            defender.active = False
+                            if players_copy.index(defender) == (len(players_copy)-1):
+                                table_of_hell.to_call = False
+                        else: 
+                            #In this case, this defender becomes the new attacker
+                            #and the while loop starts from the beginning
+                            #since everyone that is still active needs to match this new attack
+                            splitted_input_def = defender_input.split("r")
+                            if splitted_input_def[0] != "":
+                                print("Cut the bullshit bruv!")
+                            else:
+                                defender.bet = defender.bet + float(splitted_input_def[1])
+                                defender.money = defender.money - float(splitted_input_def[1])
+                                table_of_hell.pot = table_of_hell.pot + float(splitted_input_def[1])
+                                attacker = defender
+                                attacker_bet = defender.bet
+                                break
+                break
+
+       
         
         
         
@@ -109,7 +185,7 @@ def main():
     player_money = []
     for i in range(0,number_of_players):
         player_money.append(float(input()))
-    table_of_hell = Table(player_names,player_money)
+    table_of_hell = Table(player_names,player_money,1,2)
     players = table_of_hell.players
     
     
@@ -123,9 +199,11 @@ def main():
     #======Before flop=====================================
     
     #Small and big blind
-    players[0].money = players[0].money-table_of_hell.small
-    players[1].money = players[1].money-table_of_hell.big
-    table_of_hell.pot = table_of_hell.small + table_of_hell.big
+    players[0].money = players[0].money-table_of_hell.small_blind
+    players[0].bet = table_of_hell.small_blind
+    players[1].money = players[1].money-table_of_hell.big_blind
+    players[1].bet = table_of_hell.big_blind
+    table_of_hell.pot = table_of_hell.small_blind + table_of_hell.big_blind
     
     #Initial bets    
     for p in players:
@@ -135,44 +213,55 @@ def main():
             continue
         elif inp=="f":
             p.active = False
-            continue
+            if players.index(p) == (len(players)-2):
+                break
+            else:
+                continue
         splitted_input = inp.split("b")
         if splitted_input[0] != "":
             print("Cut the bullshit bruv")
         else:
             table_of_hell.to_call = True
+            attacker = p
+            attacker_bet = p.bet + float(splitted_input[1])
+            p.money = p.money - float(splitted_input[1])
+            p.bet = attacker_bet
+            table_of_hell.pot = table_of_hell.pot + float(splitted_input[1])
+            
             while table_of_hell.to_call == True:
-                for defender in players.remove(p):
-                    if defender
+                
+                players_copy = [pl for pl in players]
+                players_copy.remove(attacker)
+                                
+                for defender in players_copy:
+                    amount_to_call = attacker_bet - defender.bet
+                    print(defender.name," you need ",amount_to_call," to call")
+                    print("Press 'cl' to call, 'f' to fold or 'rx' to raise to x money")
+                    defender_input = input()
+                    if defender_input == "cl":
+                        defender.bet = attacker_bet
+                        defender.money = defender.money - amount_to_call
+                        table_of_hell.pot = table_of_hell.pot + amount_to_call
+                        if players_copy.index(defender) == (len(players_copy)-1):
+                            table_of_hell.to_call = False
+                    elif defender_input == "f":
+                        defender.active = False
+                        if players_copy.index(defender) == (len(players_copy)-1):
+                            table_of_hell.to_call = False
+                    else: 
+                        splitted_input_def = defender_input.split("r")
+                        if splitted_input_def[0] != "":
+                            print("Cut the bullshit bruv!")
+                        else:
+                            defender.bet = defender.bet + float(splitted_input_def[1])
+                            defender.money = defender.money - float(splitted_input_def[1])
+                            table_of_hell.pot = table_of_hell.pot + float(splitted_input_def[1])
+                            attacker = defender
+                            attacker_bet = defender.bet
+                            break
+            break
 
-        #if nada:
-            #"cut the bullshit"
-        #else:
-            #to_call = True
-            #while table_of_hell.to_call == True:
-                 #for defence in players.remove(attacker):
-                        #if defender raises
-                            #attacker = defender
-                            #break
-                        #else
-                            #
-        
-
-         #
-          #  if input() == "c":
-           #     continue
-            #elif input() == "f":
-             #   defender.active == False
-              #  continue
-            #splitted_input = input().split("b")
-            #if splitted_input[0] != "":
-             #   print("Cut the bullshit mate..")
-            #else:
-             #   bet = float(splitted_input[1])
-              #  table_of_hell.pot = table_of_hell.pot + bet
-               # table_of_hell.to_call = True
-               # table_of_hell.raiser = defender
-                #attacker = players.index(p)
+      
     
     #better add it as a method in Table
     
@@ -184,8 +273,15 @@ def main():
      #   sorted_players.append(p)
       #  sMin = p.seat
         
+    active_players = []
+    for p in players:
+        if p.active == True:
+            active_players.append(p)
         
-    
+    print("Active players are ",[p.name for p in active_players])
+    print(" ")
+    print("Table's pot is ",table_of_hell.pot)
+    print(" ")
     print("Name","Money","Seat","Cards")
     for p in players:
         print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
@@ -208,30 +304,30 @@ def main():
     
 
 
-#main()    
+main()    
 
 #sorter
-a = [2,3,-2,20,4,0,6]
-aInit = a
-print("This is a")
-print(aInit)
+#a = [2,3,-2,20,4,0,6]
+#aInit = a
+#print("This is a")
+#print(aInit)
 #index = []
-aSorted = []
-while len(a)!=0:
-    minim = a[0]
-    index0 = 0
-    for j in range(0,len(a)):
-        if a[j]<=minim:
-            minim = a[j]
-            index0 = j
-    aSorted.append(a[index0])
-    a.remove(a[index0])
+#aSorted = []
+#while len(a)!=0:
+#    minim = a[0]
+ #   index0 = 0
+#    for j in range(0,len(a)):
+#        if a[j]<=minim:
+#            minim = a[j]
+#            index0 = j
+#    aSorted.append(a[index0])
+#    a.remove(a[index0])
 
 #for i in range(0,len(a)):
  #   aSorted.append(a[index[i]])
 
-print("This is aSorted")
-print(aSorted)
+#print("This is aSorted")
+#print(aSorted)
         
 #t = Table(["Tazouli","Itzo","Damkaliaros","Austrekis"],[2000,2000,2000,2000])
 #t.players[0].seat = 1

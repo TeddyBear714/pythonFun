@@ -77,9 +77,9 @@ class Table:
         self.shuffled_deck = Deck()
         self.shuffled_deck.shuffler()
         self.players = []
-        self.to_call = "False"
-        self.raiser = None
-        self.raised = 0
+        self.active_players = []
+        self.to_call = False
+        self.end_of_hand = False
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
             self.players[n].set_seat(n+1)
@@ -90,17 +90,10 @@ class Table:
         
     def set_common_cards(self,common_cards):
         self.common_cards = common_cards
-        
-    def preflop(self):
-            #Small and big blind
-        players = self.players
-        table_of_hell = self
-        players[0].money = players[0].money-table_of_hell.small_blind
-        players[0].bet = table_of_hell.small_blind
-        players[1].money = players[1].money-table_of_hell.big_blind
-        players[1].bet = table_of_hell.big_blind
-        table_of_hell.pot = table_of_hell.small_blind + table_of_hell.big_blind
-
+            
+    def action(self):        
+        players = [act for act in self.active_players]                  
+                
         #Initial bets    
         for p in players:
             print(p.name," type 'c' to check, 'bx' to bet x chips or 'f' to fold")
@@ -167,6 +160,16 @@ class Table:
                                 break
                 break
 
+        for pla in players:            
+            if pla.active == False:                
+                self.active_players.remove(pla)                    
+        if len(self.active_players) == 1:
+            self.end_of_hand = True            
+
+
+    
+
+        
        
         
         
@@ -189,7 +192,8 @@ def main():
         player_money.append(float(input()))
     table_of_hell = Table(player_names,player_money,1,2)
     players = table_of_hell.players
-    
+    for act_player in players:
+        table_of_hell.append[act_player]
     
     #From here and beyond I should cut the code into a new "next_round" method in the Table class
     deck = table_of_hell.shuffled_deck
@@ -199,13 +203,41 @@ def main():
     table_of_hell.set_common_cards(common_cards)
     
     #======Before flop=====================================
-    table_of_hell.preflop()
-     
-    active_players = []
-    for p in players:
-        if p.active == True:
-            active_players.append(p)
+    #Small and big blind
+    players = table_of_hell.players
+    players[0].money = players[0].money-table_of_hell.small_blind
+    players[0].bet = table_of_hell.small_blind
+    players[1].money = players[1].money-table_of_hell.big_blind
+    players[1].bet = table_of_hell.big_blind
+    table_of_hell.pot = table_of_hell.small_blind + table_of_hell.big_blind
+    #Players' actions
+    table_of_hell.action()
+    
+    #======Flop============================================
+    if table_of_hell.end_of_hand == False:
+        print(" ")
+        print("Flop is")
+        print([[x.number,x.suit] for x in common_cards[0:3]])
         
+        #======Before turn=================================
+        table_of_hell.action()
+        
+        #======Turn========================================
+        if table_of_hell.end_of_hand == False:
+            print(" ")
+            print("Turn is")
+            print([common_cards[4].number,common_cards[4].suit])
+            
+            #======Before river============================
+            table_of_hell.action()
+            
+            #======River===================================
+            if table_of_hell.end_of_hand == False:
+                print(" ")
+                print("River is")
+                print([common_cards[5].number,common_cards[5].suit])
+
+                
     print("Active players are ",[p.name for p in active_players])
     print(" ")
     print("Table's pot is ",table_of_hell.pot)

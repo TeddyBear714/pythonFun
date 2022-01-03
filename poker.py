@@ -103,9 +103,9 @@ class Table:
                     minim = active_players_copy[j]
             sorted_list.append(minim)
             active_players_copy.remove(minim)
-        self.active_players = sorted_list
+        self.active_players = [x for x in sorted_list]
         
-    def action(self):        
+    def action(self):
         players = [act for act in self.active_players]
         
                 
@@ -193,7 +193,8 @@ class Table:
             if pla.active == False:                
                 self.active_players.remove(pla)                    
         if len(self.active_players) == 1:
-            self.end_of_hand = True            
+            self.end_of_hand = True
+        table_of_hell.seat_sorter()
 
 
     

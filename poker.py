@@ -97,10 +97,11 @@ class Table:
         while len(active_players_copy) != 0:
             minim = active_players_copy[0]
             for j in range(0,len(active_players_copy)):
-                if active_players_copy[j] <= minim:
+                if active_players_copy[j].seat <= minim.seat:
                     minim = active_players_copy[j]
             sorted_list.append(minim)
             active_players_copy.remove(minim)
+        self.active_players = sorted_list
         
     def action(self):        
         players = [act for act in self.active_players]

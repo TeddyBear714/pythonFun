@@ -107,7 +107,7 @@ class Table:
         
     def action(self):
         players = [act for act in self.active_players]
-        
+        table_of_hell = self       
                 
         #Initial bets    
         for p in players:
@@ -121,6 +121,8 @@ class Table:
                     break
                 else:
                     continue
+                players.remove(p)
+                self.active_players.remove(p)
             splitted_input = inp.split("b")
             if splitted_input[0] != "":
                 print("Cut the bullshit bruv")
@@ -135,15 +137,15 @@ class Table:
                 attacker_index = table_of_hell.active_players.index(attacker)
                 new_active_players = []
                 for i in range(attacker_index,len(table_of_hell.active_players)):
-                    new_active_players.append(table_of_hell.active_players[i])
+                    new_active_players.append(players[i])
                 for i in range(0,attacker_index):
-                    new_active_players.append(table_of_hell.active_players[i])
+                    new_active_players.append(players[i])
                 table_of_hell.active_players = [x for x in new_active_players]                           
                     
                 while table_of_hell.to_call == True:
 
                     active_defence_players = []
-                    for act_def in players:
+                    for act_def in table_of_hell.active_players:
                         active_defence_players.append(act_def)
                     active_defence_players.remove(attacker)
                     
@@ -166,6 +168,7 @@ class Table:
                             defender.active = False
                             if active_defence_players.index(defender) == (len(active_defence_players)-1):
                                 table_of_hell.to_call = False
+                            self.active_players.remove(defender)
                         else: 
                             #In this case, this defender becomes the new attacker
                             #and the while loop starts from the beginning
@@ -222,9 +225,7 @@ def main():
         player_money.append(float(input()))
     table_of_hell = Table(player_names,player_money,1,2)
     players = table_of_hell.players
-    for act_player in players:
-        table_of_hell.append[act_player]
-    
+
     #From here and beyond I should cut the code into a new "next_round" method in the Table class
     deck = table_of_hell.shuffled_deck
     for n in range(0,len(players)):
@@ -256,7 +257,7 @@ def main():
         if table_of_hell.end_of_hand == False:
             print(" ")
             print("Turn is")
-            print([common_cards[4].number,common_cards[4].suit])
+            print([common_cards[3].number,common_cards[3].suit])
             
             #======Before river============================
             table_of_hell.action()
@@ -265,18 +266,22 @@ def main():
             if table_of_hell.end_of_hand == False:
                 print(" ")
                 print("River is")
-                print([common_cards[5].number,common_cards[5].suit])
+                print([common_cards[4].number,common_cards[4].suit])
                 
                 #======Final action========================
                 table_of_hell.action()
+    print("Active players are ",[p.name for p in table_of_hell.active_players])
+    print(" ")
+    print("Table's pot is ",table_of_hell.pot)
+    print(" ")
+    print("Name","Money","Seat","Cards")
+    for p in players:
+        print(p.name,p.money,p.seat,[p.cards[0].number,p.cards[0].suit,p.cards[1].number,p.cards[1].suit])
 
 
                 
                 
 #Next steps:
-#         Find a way to change the order of players based on their seats in the beginning and then using the attacker as the
-#         first player after each attack 
-
 #         Find a way to find the different combos and sort out the which one is the dominant each time new cards are opened
 
 #         Start making strategic players/bots

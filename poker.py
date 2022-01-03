@@ -90,9 +90,21 @@ class Table:
         
     def set_common_cards(self,common_cards):
         self.common_cards = common_cards
-            
+        
+    def seat_sorter(self):
+        active_players_copy = [x for x in self.active_players]
+        sorted_list = []
+        while len(active_players_copy) != 0:
+            minim = active_players_copy[0]
+            for j in range(0,len(active_players_copy)):
+                if active_players_copy[j] <= minim:
+                    minim = active_players_copy[j]
+            sorted_list.append(minim)
+            active_players_copy.remove(minim)
+        
     def action(self):        
-        players = [act for act in self.active_players]                  
+        players = [act for act in self.active_players]
+        
                 
         #Initial bets    
         for p in players:

@@ -83,6 +83,8 @@ class Table:
         for n in range(0,len(player_money)):
             self.players.append(Player(player_names[n],player_money[n]))
             self.players[n].set_seat(n+1)
+            self.active_players.append(Player(player_names[n],player_money[n]))
+            self.active_players[n].seat = n+1
             #self.players[n].set_cards([self.shuffled_deck.cards(n),self.shuffled_deck.cards(n+len(player_money))])
     
     def set_pot(self,new_pot):
@@ -129,13 +131,20 @@ class Table:
                 p.money = p.money - float(splitted_input[1])
                 p.bet = attacker_bet
                 table_of_hell.pot = table_of_hell.pot + float(splitted_input[1])
-
+                
+                attacker_index = table_of_hell.active_players.index(attacker)
+                new_active_players = []
+                for i in range(attacker_index,len(table_of_hell.active_players)):
+                    new_active_players.append(table_of_hell.active_players[i])
+                for i in range(0,attacker_index):
+                    new_active_players.append(table_of_hell.active_players[i])
+                table_of_hell.active_players = [x for x in new_active_players]                           
+                    
                 while table_of_hell.to_call == True:
 
                     active_defence_players = []
                     for act_def in players:
-                        if act_def.active == True:
-                            active_defence_players.append(act_def)
+                        active_defence_players.append(act_def)
                     active_defence_players.remove(attacker)
                     
                     #defenders are all the players that need to match a bet by an attacker
@@ -170,6 +179,13 @@ class Table:
                                 table_of_hell.pot = table_of_hell.pot + float(splitted_input_def[1])
                                 attacker = defender
                                 attacker_bet = defender.bet
+                                attacker_index = table_of_hell.active_players.index(attacker)
+                                new_active_players = []
+                                for i in range(attacker_index,len(table_of_hell.active_players)):
+                                    new_active_players.append(table_of_hell.active_players[i])
+                                for i in range(0,attacker_index):
+                                    new_active_players.append(table_of_hell.active_players[i])
+                                table_of_hell.active_players = [x for x in new_active_players]                         
                                 break
                 break
 
